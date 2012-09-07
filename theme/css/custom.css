@@ -1,0 +1,67 @@
+.doclist {
+	font-size: 2em;
+}
+.doclist > p {
+	display: inline-block;
+}
+.docs {
+	display: inline-block;
+}
+.doc {
+	position: relative;
+	top: 0.5em;
+	display: inline-block;
+	width: 1em;
+	height: 1.3em;
+	text-align: center;
+	border: 1px solid black;
+}
+.doc:last-child {
+}
+.doc p {
+	position: absolute;
+	text-align: left;
+	top: 0px;
+	left: 0px;
+	font-size: 0.25em;
+	line-height: 1em;
+	padding: 10px;
+	box-sizing: border-box;
+}
+.comma {
+	display: inline-block;
+}
+.fdoc, ._fdoc {
+	margin-left: 0.6em;
+	margin-right: 0.4em;
+}
+.fdoc:before {
+	color: #ccc;
+	position: absolute;
+	right: 1.1em;
+	content: "f(";
+}
+.fdoc:after {
+	color: #ccc;
+	position: absolute;
+	left: 1.1em;
+	content: ")";
+}
+
+.downarrow {
+	font-size: 4em;
+}
+
+em {
+	font-weight: bold;
+	font-style: italic;
+}
+article h2{
+	line-height: 1.2em;
+}
+
+blockquote {
+	padding: 1em;
+	background-color: #eee;
+	line-height: 1.2em;
+}
