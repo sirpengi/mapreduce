@@ -1,0 +1,636 @@
+<!--
+Google IO 2012 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MapReduce</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="all" href="theme/css/custom.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/logo.png"></span>
+    </article>
+  </slide>
+
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/logo_128.png"></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+			<h2>MapReduce</h2>
+    </hgroup>
+    <article>
+      <ol>
+				<li>What it is</li>
+				<li>Examples</li>
+				<li>Examples</li>
+				<li>Examples</li>
+				<li>Examples</li>
+      </ol>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>MapReduce</h2>
+    </hgroup>
+    <article>
+			<p>From Wikipedia:<p>
+			<blockquote>MapReduce is a programming model for processing large data sets, and the name of an implementation of the model by Google. MapReduce is typically used to do distributed computing on clusters of computers.</blockquote>
+		</article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Map</h2>
+    </hgroup>
+    <article>
+			<p>From Wikipedia:<p>
+			<blockquote>In many programming languages, map is the name of a higher-order function that applies a given function to each element of a list, returning a list of results. It is often called apply-to-all when considered in functional form. This is an example of homomorphism.</blockquote>
+		</article>
+  </slide>
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+			<h2>MapReduce = Map + Reduce</h2>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Map</h2>
+    </hgroup>
+    <article>
+			<h3>Apply-to-all</h3>
+			<pre class="prettyprint larger" data-lang="javascript">
+var f = function(v){
+	return _v;
+};</pre>
+		</article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Map</h2>
+    </hgroup>
+    <article>
+			<div class="doclist"><p>[</p>
+				<div class="docs">
+					<div class="doc _fdoc">
+						<p>id:1<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc _fdoc">
+						<p>id:2<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc _fdoc">
+						<p>id:3<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc _fdoc">
+						<p>id:4<br>...<br>...</p>
+					</div>
+				</div>
+			<p>]</p></div>
+			<div class="downarrow">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&darr;</div>
+			<div class="doclist"><p>[</p>
+				<div class="docs">
+					<div class="doc fdoc">
+						<p>id:1<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc fdoc">
+						<p>id:2<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc fdoc">
+						<p>id:3<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc fdoc">
+						<p>id:4<br>...<br>...</p>
+					</div>
+				</div>
+			<p>]</p></div>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Map</h2>
+    </hgroup>
+    <article>
+			<pre class="prettyprint larger" data-lang="javascript">
+var square = function(v){
+	return v * v;
+};</pre>
+			<pre class="prettyprint larger" data-lang="javascript">
+var arr = [1, 2, 3];
+_.map(arr, square); # => [1, 4, 9]
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Map</h2>
+    </hgroup>
+    <article>
+			<pre class="prettyprint" data-lang="javascript">
+var Person = function(name, gender, age) {
+	this.name = name;
+	this.gender = gender;
+	this.age = age;
+};
+
+var arr = [
+	new Person('Andy', 'M', 18),
+	new Person('Bob', 'M', 28),
+	new Person('Carla', 'F', 19),
+	new Person('Debbie', 'F', 25),
+	new Person('Eddie', 'M', 22)
+];
+</pre>
+		</article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Map</h2>
+    </hgroup>
+    <article>
+			<pre class="prettyprint" data-lang="javascript">
+var letters_in_name = function (person) {
+	return person.name.length;
+};
+
+var attractive_score = function (person) {
+	return person.gender === 'F' ? 100 : -10;
+};
+
+_.map(arr, letters_in_name);
+# => [4, 3, 5, 6, 5];
+
+_.map(arr, attractive_score);
+# => [-10, -10, 100, 100, -10];</pre>
+		</article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Map</h2>
+    </hgroup>
+    <article>
+			<pre class="prettyprint medium" data-lang="javascript">
+var make_tuple = function (person) {
+	return [person.name, person.gender];
+};
+
+_.map(arr, make_tuple);
+# => [['Andy', 'M'], ['Bob', 'M'], ['Carla', 'F'], ...]</pre>
+		</article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Map</h2>
+    </hgroup>
+    <article>
+			<pre class="prettyprint larger" data-lang="javascript">
+var identity = function (v) {
+	return v;
+};
+
+_.map([1, 2, 3, 4], identity);
+# => [1, 2, 3, 4];</pre>
+		</article>
+  </slide>
+
+
+  <slide>
+    <hgroup>
+			<h2>Map Recap</h2>
+    </hgroup>
+    <article>
+			<h2>&middot; Operates on <em>Collections</em></h2>
+			<h2>&middot; Alters every element using same operation</h2>
+			<h2>&middot; input.length === output.length</h2>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Reduce</h2>
+    </hgroup>
+    <article>
+			<p>From Wikipedia:<p>
+			<blockquote>In functional programming, fold – also known variously as reduce, accumulate, compress, or inject – are a family of higher-order functions that analyze a recursive data structure and recombine through use of a given combining operation the results of recursively processing its constituent parts, building up a return value. Typically, a fold is presented with a combining function, a top node of a data structure, and possibly some default values <strong>BLAH BLAH BLAH</strong></blockquote>
+		</article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Reduce</h2>
+    </hgroup>
+    <article>
+			<div class="doclist"><p>[</p>
+				<div class="docs">
+					<div class="doc _fdoc">
+						<p>id:1<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc _fdoc">
+						<p>id:2<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc _fdoc">
+						<p>id:3<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc _fdoc">
+						<p>id:4<br>...<br>...</p>
+					</div>
+				</div>
+			<p>]</p></div>
+			<div class="downarrow">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&darr;</div>
+			<div class="doclist">
+				<div class="docs">
+					<div class="doc" style="margin-left: 500%">
+						<p>VAL</p>
+					</div>
+				</div>
+			</div>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Reduce</h2>
+    </hgroup>
+    <article>
+			<h2>Underscore's reduce</h2>
+			<pre class="prettyprint larger" data-lang="javascript">
+_.reduce(list, iterator, init)</pre>
+			<p><em>Iterator</em> is any f(memo, val)</p>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Reduce</h2>
+    </hgroup>
+    <article>
+			<pre class="prettyprint larger" data-lang="javascript">
+var sum = function(memo, v){
+	return memo + v;
+};</pre>
+			<pre class="prettyprint larger" data-lang="javascript">
+var arr = [1, 2, 3];
+_.reduce(arr, sum, 0);
+# => 6
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Reduce</h2>
+    </hgroup>
+    <article>
+			<pre class="prettyprint medium" data-lang="javascript">
+_.reduce([1,2,3], sum, 0)
+
+memo = 0
+v = 1  <-  [   2, 3]
+sum(0, 1) # 1
+
+v = 2  <-  [      3]
+sum(1, 2) # 3
+
+v = 3  <-  [       ]
+sum(3, 3) # 6
+return 6</pre>
+    </article>
+  </slide>
+	
+  <slide>
+    <hgroup>
+      <h2>Reduce</h2>
+    </hgroup>
+    <article>
+			<pre class="prettyprint medium" data-lang="javascript">
+var arr = ['M', 'M', 'F', 'F', 'M'];
+</pre>
+			<h2>Somehow get to:</h2>
+			<pre class="prettyprint medium" data-lang="javascript">
+{M: 3, F:2}</pre>
+		</article>
+	</slide>
+
+  <slide>
+    <hgroup>
+      <h2>Reduce</h2>
+    </hgroup>
+    <article>
+			<pre class="prettyprint medium" data-lang="javascript">
+var counter = function(memo, v){
+	memo[v]++;
+	return memo
+};
+
+_.reduce(arr, counter, {M:0, F:0});</pre>
+		</article>
+	</slide>
+
+  <slide>
+    <hgroup>
+      <h2>Reduce</h2>
+    </hgroup>
+    <article>
+			<pre class="prettyprint medium" data-lang="javascript">
+_.reduce(arr, counter, {M:0, F:0});
+
+memo = {M:0, F:0}
+v = 'M'   <-  ['M', 'F', 'F', 'M']
+counter({M:0, F:0}, 'M') # {M:1, F:0}
+
+v = 'M'   <-  ['F', 'F', 'M']
+counter({M:1, F:0}, 'M') # {M:2, F:0}
+
+v = 'F'   <-  ['F', 'M']
+counter({M:2, F:0}, 'F') # {M:2, F:1}</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Map-Reduce</h2>
+    </hgroup>
+    <article>
+			<h2>&middot; Not software, but process</h2>
+			<p>(implementations may differ, idea is same)</p>
+			<h2>&middot; Designed for data at scale</h2>
+			<p>Most useful for partitioned/sharded environments</p>
+			<h2>&middot; We will talk about mongo</h2>
+			<p>Because it's approachable, obtainable</p>
+		</article>
+	</slide>
+	
+  <slide>
+    <hgroup>
+      <h2>Map-Reduce</h2>
+    </hgroup>
+    <article>
+			<div class="doclist"><p>[</p>
+				<div class="docs">
+					<div class="doc">
+						<p>id:1<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:2<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:3<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:4<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:5<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:6<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:7<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:8<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:9<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:10<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+				</div>
+			</div>
+			<div class="doclist">
+				<div class="docs">
+					<div class="doc">
+						<p>id:11<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:12<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:13<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:14<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:15<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:16<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:17<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:18<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:19<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:20<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+				</div>
+				<p>&nbsp;</p>
+			</div>
+			<div class="doclist">
+				<div class="docs">
+					<div class="doc">
+						<p>id:21<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:22<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:23<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:24<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:25<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:26<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:27<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:28<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:29<br>...<br>...</p>
+					</div>
+					<div class="comma">,</div>
+					<div class="doc">
+						<p>id:30<br>...<br>...</p>
+					</div>
+				</div>
+			<p>]</p></div>
+		</article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Map-Reduce</h2>
+    </hgroup>
+    <article>
+			<img src="images/hd.jpg">
+		</article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Map-Reduce</h2>
+    </hgroup>
+    <article>
+			<script>
+				for (var i=0; i<180; i++) {
+					document.write('<img src="images/hd.jpg" style="width:5%;">');
+				}
+			</script>
+		</article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Reduce</h2>
+    </hgroup>
+    <article>
+			<pre class="prettyprint medium" data-lang="javascript">
+sum(1, 2, 3, 4, 5, 6) # 21
+</pre>
+			<pre class="prettyprint medium" data-lang="javascript">
+sum(sum(1, 2, 3), sum(4, 5, 6)) # 21
+</pre>
+			<pre class="prettyprint medium" data-lang="javascript">
+sum(sum(6, 5, 4), sum(3, 2, 1)) # 21
+</pre>
+			<pre class="prettyprint medium" data-lang="javascript">
+sum(
+	sum(6, 5),
+	sum(4),
+	sum(sum(3), sum(2, 1))
+) # 21
+</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Mongo Map-Reduce</h2>
+    </hgroup>
+    <article>
+			<h2>&middot; Data is in documents (probably sharded)</h2>
+			<h2>&middot; Map documents to some value(s), reduce those values down</h2>
+			<h2>&middot; Do this work distributively</h2>
+		</article>
+  </slide>
+
+  <slide class="logoslide nobackground">
+    <article class="flexbox vcenter">
+			<h2>Let's see it in action!</h2>
+    </article>
+  </slide>
+
+  <slide class="thank-you-slide segue nobackground">
+    <aside class="gdbar right"><img src="images/logo_128.png"></aside>
+    <article class="flexbox vleft auto-fadein">
+      <h2>&lt;Thank You!&gt;</h2>
+      <p>Friends don't let friends drink and add indexes</p>
+    </article>
+    <p class="auto-fadein" data-config-contact>
+      <!-- populated from slide_config.json -->
+    </p>
+  </slide>
+
+  <slide class="logoslide dark nobackground">
+    <article class="flexbox vcenter">
+      <span><img src="images/logo.png"></span>
+    </article>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
